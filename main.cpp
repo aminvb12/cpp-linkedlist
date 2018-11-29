@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cstring>
+
 
 using namespace std;
 
@@ -44,7 +44,6 @@ public:
             this->tail->next = newNode;
             this->tail = newNode;
         }
-        this->size ++;
         return newNode;
     }
 
@@ -52,13 +51,30 @@ public:
         return this->tail->data;
     }
 
-    void insertLast(int data){
-        Node *temp = this->createNewNode(data);
-        this->tail->next = temp;
-        this->tail = temp;
+    Node *getHead (){
+        return this->head;
     }
 
+    bool search(Node *head , int data){
+        if(head->data == data){
+            return true;
+        }
+        return search(head->next , data);
+    }
 
+    void insertLast(int data){
+        if(this->head){
+            Node *temp = this->createNewNode(data);
+            this->tail->next = temp;
+            this->tail = temp;
+            this->size++;
+        }
+
+        else{
+            this->createNewNode(data);
+            this->size++;
+        }
+    }
 
     void insert_first(int data){
         if (this->head) {
@@ -70,6 +86,7 @@ public:
         }
         else if(!this->head){
             this->createNewNode(data);
+            this->size++;
         }
     };
 
@@ -94,8 +111,9 @@ int main() {
     test->insertLast(22);
     test->insert_first(10);
     test->display();
-    cout<<endl;
-    cout<<test->getSize()<<endl;
+    cout<<test->getHead()->data<<endl;
+    cout<<test->search(test->getHead() , 18)<<endl;
+
 
     return 0;
 }
