@@ -1,7 +1,7 @@
 #include <iostream>
-
-
 using namespace std;
+
+
 
 
 class Node {
@@ -28,79 +28,81 @@ public:
         this->tail = nullptr;
     }
 
-    int getSize(){
-        return this->size;
-    }
+    int getSize(){ return this->size; }
 
-    Node *createNewNode (int data){
-        Node *newNode = new Node();
-        newNode->next = nullptr;
-        newNode->data = data;
-        if(!this->head){
-            this->head = newNode;
-            this->tail = newNode;
-        }
-        if(!this->tail){
-            this->tail->next = newNode;
-            this->tail = newNode;
-        }
-        return newNode;
-    }
+    Node *createNewNode (int data);
 
-    int getTail(){
-        return this->tail->data;
-    }
+    int getTail(){ return this->tail->data; }
 
-    Node *getHead (){
-        return this->head;
-    }
+    Node *getHead (){ return this->head; }
 
-    bool search(Node *head , int data){
-        if(head->data == data){
-            return true;
-        }
-        return search(head->next , data);
-    }
+    bool search(Node *head , int data);
 
-    void insertLast(int data){
-        if(this->head){
-            Node *temp = this->createNewNode(data);
-            this->tail->next = temp;
-            this->tail = temp;
-            this->size++;
-        }
+    void insertLast(int data);
 
-        else{
-            this->createNewNode(data);
-            this->size++;
-        }
-    }
+    void insert_first(int data);
 
-    void insert_first(int data){
-        if (this->head) {
-            Node *temp = new Node();
-            temp->next = head;
-            temp->data = data;
-            head = temp;
-            this->size ++;
-        }
-        else if(!this->head){
-            this->createNewNode(data);
-            this->size++;
-        }
-    };
-
-    void display(){
-        Node *temp = new Node();
-        temp = head;
-        while (temp != NULL) {
-            string arrow = (temp->next) ? ("->") : (" ");
-            cout << temp->data <<arrow;
-            temp = temp->next;
-        }
-    };
+    void display();
 };
 
+Node* LinkedList::createNewNode(int data) {
+    Node *newNode = new Node();
+    newNode->next = nullptr;
+    newNode->data = data;
+    if(!this->head){
+        this->head = newNode;
+        this->tail = newNode;
+    }
+    if(!this->tail){
+        this->tail->next = newNode;
+        this->tail = newNode;
+    }
+    return newNode;
+}
+
+bool LinkedList::search(Node *head, int data) {
+    if(head->data == data){
+        return true;
+    }
+    return search(head->next , data);
+}
+
+
+void LinkedList::insertLast(int data) {
+    if(this->head){
+        Node *temp = this->createNewNode(data);
+        this->tail->next = temp;
+        this->tail = temp;
+    }
+    else{
+        this->createNewNode(data);
+    }
+    this->size++;
+}
+
+void LinkedList::insert_first(int data) {
+    if (this->head) {
+        Node *temp = new Node();
+        temp->next = head;
+        temp->data = data;
+        head = temp;
+        this->size ++;
+    }
+    else if(!this->head){
+        this->createNewNode(data);
+        this->size++;
+    }
+}
+
+void LinkedList::display() {
+    Node *temp = new Node();
+    temp = head;
+    while (temp != NULL) {
+        string arrow = (temp->next) ? ("->") : (" ");
+        cout << temp->data <<arrow;
+        temp = temp->next;
+    }
+}
 
 
 int main() {
@@ -112,9 +114,8 @@ int main() {
     test->insert_first(10);
     test->display();
     cout<<test->getHead()->data<<endl;
+    cout<<test->getSize()<<endl;
     cout<<test->search(test->getHead() , 18)<<endl;
-
-
     return 0;
 }
 
