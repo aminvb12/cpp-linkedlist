@@ -1,13 +1,14 @@
 #include <iostream>
+#include <cstring>
+
 using namespace std;
-
-
 
 
 class Node {
 public:
     int data;
-    Node *next ;
+    Node *next;
+    Node *prev;
 };
 
 
@@ -18,63 +19,74 @@ private:
     int size = 0;
 public:
     LinkedList(Node *head) : head(head) {}
+
     LinkedList(int data) {
         this->head->data = data;
         this->head->next = nullptr;
+        this->head->prev = nullptr;
     }
 
-    LinkedList(){
+    LinkedList() {
         this->head = nullptr;
         this->tail = nullptr;
     }
 
-    int getSize(){ return this->size; }
+    int getSize() { return this->size; }
 
-    Node *createNewNode (int data);
+    void deleteFirstNode();
 
-    int getTail(){ return this->tail->data; }
+    void deletePosition(int);
 
-    Node *getHead (){ return this->head; }
+    Node *createNewNode(int data);
 
-    bool search(Node *head , int data);
+    int getTail() { return this->tail->data; }
+
+    Node *getHead() { return this->head; }
+
+    bool search(int data);
 
     void insertLast(int data);
 
     void insert_first(int data);
 
     void display();
+
+    Node *secondSearch(int data);
 };
 
-Node* LinkedList::createNewNode(int data) {
+Node *LinkedList::createNewNode(int data) {
     Node *newNode = new Node();
     newNode->next = nullptr;
+//    newNode->prev = nullptr;
     newNode->data = data;
-    if(!this->head){
+    if (!this->head) {
         this->head = newNode;
         this->tail = newNode;
     }
-    if(!this->tail){
+    if (!this->tail) {
         this->tail->next = newNode;
         this->tail = newNode;
     }
     return newNode;
 }
 
-bool LinkedList::search(Node *head, int data) {
-    if(head->data == data){
+
+bool LinkedList::search(int data) {
+    if (this->head->data == data) {
         return true;
     }
-    return search(head->next , data);
+    this->head = this->getHead()->next;
+    return search(data);
 }
 
 
 void LinkedList::insertLast(int data) {
-    if(this->head){
+    if (this->head) {
         Node *temp = this->createNewNode(data);
         this->tail->next = temp;
+        temp->prev = this->tail;
         this->tail = temp;
-    }
-    else{
+    } else {
         this->createNewNode(data);
     }
     this->size++;
@@ -84,14 +96,15 @@ void LinkedList::insert_first(int data) {
     if (this->head) {
         Node *temp = new Node();
         temp->next = head;
+        head->prev = temp;
+        temp->prev = nullptr;
         temp->data = data;
         head = temp;
-        this->size ++;
-    }
-    else if(!this->head){
+    } else if (!this->head) {
         this->createNewNode(data);
-        this->size++;
     }
+
+    this->size++;
 }
 
 void LinkedList::display() {
@@ -99,9 +112,33 @@ void LinkedList::display() {
     temp = head;
     while (temp != NULL) {
         string arrow = (temp->next) ? ("->") : (" ");
-        cout << temp->data <<arrow;
+        cout << temp->data << arrow;
         temp = temp->next;
     }
+}
+
+void LinkedList::deleteFirstNode() {
+    Node *temp = this->getHead();
+    this->head = this->getHead()->next;
+    delete (temp);
+}
+
+Node *LinkedList::secondSearch(int data) {
+    Node *temp = this->getHead();
+    while (temp != nullptr) {
+        if (temp->data == data) {
+            return temp;
+        }
+        temp = temp->next;
+    }
+}
+
+
+void LinkedList::deletePosition(int data) {
+    Node *temp = this->secondSearch(data);
+    temp->prev->next = temp->next;
+    delete (temp);
+
 }
 
 
@@ -112,10 +149,10 @@ int main() {
     test->insertLast(18);
     test->insertLast(22);
     test->insert_first(10);
+    test->deletePosition(12);
     test->display();
-    cout<<test->getHead()->data<<endl;
-    cout<<test->getSize()<<endl;
-    cout<<test->search(test->getHead() , 18)<<endl;
+
+
     return 0;
 }
 
